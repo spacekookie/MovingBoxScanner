@@ -3,7 +3,7 @@
     <item
         android:id="@+id/action_credits"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        android:showAsAction="always"
         android:title="@string/global_button_settings"/>
 
 </menu>

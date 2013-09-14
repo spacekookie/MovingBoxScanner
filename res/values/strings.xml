@@ -6,4 +6,15 @@
     <string name="home_button_scan">Scan a Box Code</string>
     <string name="home_message_welcome">Welcome to Box Scan Pro; a free app that makes your move easy as pie. Use our free web applet at www.2rsoftworks.de/moveit to encode your barcodes. Use this app to read out the info and let it display in comfortable tables</string>
 
+    <!-- Toasts. Nom Nom Nom -->
+    <string name="toast_error_canceled">The user aborded the scan</string>
+    <string name="toast_error_readfail">Something went horribly wrong while reading your QR code :(</string>
+    <string name="toast_popup_done">Seems like there is no more data to be processed. Redirecting…</string>
+
+    <!-- Display Activity -->
+
+    <string name="display_button_name_placeholder">Box Name</string>
+    <string name="display_button_location_placeholder">Box Location</string>
+    <string name="display_button_contents_header">Box Contents</string>
+
 </resources>

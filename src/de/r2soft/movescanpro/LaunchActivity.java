@@ -18,6 +18,20 @@
 
 package de.r2soft.movescanpro;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashSet;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -38,6 +52,16 @@ import android.widget.Toast;
 public class LaunchActivity extends Activity {
 
   private Button scan;
+  private NodeList list;
+
+  /** XML parsing points */
+  private String _name = "name";
+  private String _location = "location";
+  private String _item = "item";
+
+  /** QR code Data */
+  private String name = null, location = null;
+  private HashSet<String> items;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +100,98 @@ public class LaunchActivity extends Activity {
 	if (requestCode == 0) {
 
 	  if (resultCode == RESULT_OK) {
-		Toast.makeText(this, data.getStringExtra("SCAN_RESULT"), Toast.LENGTH_LONG).show();
+		try {
+		  this.readData(data.getStringExtra("SCAN_RESULT"));
+		}
+		catch (ParserConfigurationException e) {
+		  Toast.makeText(this, R.string.toast_error_canceled, Toast.LENGTH_SHORT).show();
+		  return;
+		}
+		catch (SAXException e) {
+		  Toast.makeText(this, R.string.toast_error_readfail, Toast.LENGTH_SHORT).show();
+		  return;
+		}
+		catch (IOException e) {
+		  Toast.makeText(this, R.string.toast_error_readfail, Toast.LENGTH_SHORT).show();
+		  return;
+		}
 	  }
 	  if (resultCode == RESULT_CANCELED) {
-		Toast.makeText(this, "The user aborded the scan", Toast.LENGTH_LONG).show();
+		Toast.makeText(this, R.string.toast_error_canceled, Toast.LENGTH_LONG).show();
+	  }
+
+	  if (name != null) {
+		Intent redirect = new Intent(this, DisplayActivity.class);
+		Bundle info = new Bundle();
+		info.putString(_name, name);
+		info.putString(_location, location);
+		info.putSerializable(_item, items);
+		redirect.putExtras(info);
+
+		this.wipeData();
+
+		this.startActivity(redirect);
+	  }
+
+	}
+  }
+
+  private void wipeData() {
+	name = null;
+	location = null;
+	items = null;
+	list = null;
+  }
+
+  private void readData(String data) throws ParserConfigurationException, SAXException, IOException {
+
+	String _name = "name";
+	String _location = "location";
+	String _item = "item";
+
+	items = new HashSet<String>();
+
+	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	Document doc = dBuilder.parse(new ByteArrayInputStream(data.getBytes()));
+	doc.getDocumentElement().normalize();
+
+	/** Reads the box name */
+	list = doc.getElementsByTagName(_name);
+	for (int i = 0; i < list.getLength(); i++) {
+	  Node node = list.item(i);
+	  if (list.item(i).getNodeType() == Node.ELEMENT_NODE) {
+		Element element = (Element) node;
+		if (_name.equals(element.getNodeName())) {
+		  name = element.getTextContent();
+		}
 	  }
 	}
+
+	/** Reads the box location */
+	list = doc.getElementsByTagName(_location);
+	for (int j = 0; j < list.getLength(); j++) {
+	  Node node = list.item(j);
+	  if (list.item(j).getNodeType() == Node.ELEMENT_NODE) {
+		Element element = (Element) node;
+		if (_location.equals(element.getNodeName())) {
+		  location = element.getTextContent();
+		}
+	  }
+	}
+
+	/** Reads the box location */
+	list = doc.getElementsByTagName(_item);
+	for (int k = 0; k < list.getLength(); k++) {
+	  Node node = list.item(k);
+	  if (list.item(k).getNodeType() == Node.ELEMENT_NODE) {
+		Element element = (Element) node;
+		if (_item.equals(element.getNodeName())) {
+		  items.add(element.getTextContent());
+		}
+	  }
+	}
+
   }
 
   @Override
