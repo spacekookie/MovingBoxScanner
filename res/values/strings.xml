@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Box Scan Pro</string>
+    <string name="global_button_settings">Credits</string>
+    <string name="home_button_scan">Scan a Box Code</string>
+    <string name="home_message_welcome">Welcome to Box Scan Pro; a free app that makes your move easy as pie. Use our free web applet at www.2rsoftworks.de/moveit to encode your barcodes. Use this app to read out the info and let it display in comfortable tables</string>
+
+</resources>
