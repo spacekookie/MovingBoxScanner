@@ -6,6 +6,7 @@ The application was designed to work in cooperation with our web applet over at 
 
 Alternatively you can just create your own xml texts in this manner:
 
+```
 <box>
 	<name>Name</name>
 	<location>Location</location>
@@ -15,5 +16,6 @@ Alternatively you can just create your own xml texts in this manner:
 		<item>Item 3</item>
 	</contents>
 </box>
+```
 
 ONLY STORE ONE BOX PER QR CODE. Additional boxes will be ignored!
